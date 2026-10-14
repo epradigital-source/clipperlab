@@ -242,6 +242,135 @@ window.addEventListener('beforeunload', () => {
     }
   });
 </script>
+```html
+<!-- ClipperLab Dashboard -->
+<style>
+  #clip-dashboard {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: #0b0b12;
+    color: white;
+    font-family: Arial, sans-serif;
+    overflow-y: auto;
+    padding: 24px;
+    box-sizing: border-box;
+  }
 
+  #clip-dashboard .dash-card {
+    background: #171722;
+    border: 1px solid #29293a;
+    padding: 20px;
+    border-radius: 16px;
+    margin: 14px 0;
+  }
+
+  #clip-dashboard button {
+    border: 0;
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 5px 5px 5px 0;
+  }
+
+  #clip-dashboard .primary {
+    background: #8055ff;
+    color: white;
+  }
+
+  #clip-dashboard .secondary {
+    background: #29293a;
+    color: white;
+  }
+
+  #clip-dashboard .muted {
+    color: #aaaabb;
+  }
+</style>
+
+<div id="clip-dashboard">
+  <h1>Clipper<span style="color:#9b7aff">Lab</span></h1>
+  <p class="muted">Dashboard kreator video kamu.</p>
+
+  <div class="dash-card">
+    <h2>Selamat datang! 👋</h2>
+    <img id="dash-photo" alt="Foto profil"
+      style="width:60px;height:60px;border-radius:50%;object-fit:cover;display:none">
+    <p id="dash-name">Kreator</p>
+    <p id="dash-email" class="muted"></p>
+    <button id="dash-logout" class="secondary">Keluar</button>
+  </div>
+
+  <div class="dash-card">
+    <h3>🎬 Mulai clipping</h3>
+    <p class="muted">Pilih video untuk memulai proyek editing.</p>
+    <button id="dash-start" class="primary">Mulai Edit Video</button>
+  </div>
+
+  <div class="dash-card">
+    <h3>📁 Proyek kamu</h3>
+    <p id="dash-projects">Belum ada proyek yang tercatat.</p>
+    <p class="muted">Riwayat proyek akan ditambahkan pada tahap berikutnya.</p>
+  </div>
+
+  <div class="dash-card">
+    <h3>⭐ ClipperLab Premium</h3>
+    <p class="muted">Bagian untuk fitur Premium. Pembayaran dan paket belum diaktifkan.</p>
+    <button id="dash-premium" class="secondary">Lihat Fitur</button>
+  </div>
+
+  <button id="dash-back" class="secondary">Kembali ke Editor</button>
+</div>
+
+<script type="module">
+  import { getAuth, onAuthStateChanged, signOut }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const auth = getAuth();
+  const dashboard = document.getElementById("clip-dashboard");
+
+  onAuthStateChanged(auth, user => {
+    if (!user) {
+      dashboard.style.display = "none";
+      return;
+    }
+
+    document.getElementById("dash-name").textContent =
+      user.displayName || "Kreator";
+    document.getElementById("dash-email").textContent =
+      user.email || "";
+
+    const photo = document.getElementById("dash-photo");
+    if (user.photoURL) {
+      photo.src = user.photoURL;
+      photo.style.display = "block";
+    } else {
+      photo.style.display = "none";
+    }
+
+    dashboard.style.display = "block";
+  });
+
+  document.getElementById("dash-logout").onclick = async () => {
+    await signOut(auth);
+    dashboard.style.display = "none";
+  };
+
+  document.getElementById("dash-start").onclick = () => {
+    dashboard.style.display = "none";
+    document.getElementById("chooseBtn")?.click();
+  };
+
+  document.getElementById("dash-back").onclick = () => {
+    dashboard.style.display = "none";
+  };
+
+  document.getElementById("dash-premium").onclick = () => {
+    alert("Fitur Premium sedang disiapkan!");
+  };
+</script>
+```
 </body>
 </html>
