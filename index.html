@@ -372,7 +372,14 @@ window.addEventListener('beforeunload', () => {
     grid-template-columns: 1fr;
   }
 }
- 
+
+/* Sembunyikan kartu dashboard versi lama */
+#clip-dashboard > h1,
+#clip-dashboard > p.muted,
+#clip-dashboard > .dash-card {
+  display: none !important;
+}
+
 </style>
 
 <button id="open-dashboard" style="
