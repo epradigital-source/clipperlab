@@ -646,6 +646,23 @@ if (project.videoName) {
       clRenderProjects();
     });
 
+document.getElementById("cl-new-project").addEventListener("click", () => {
+  const name = prompt("Masukkan nama proyek:");
+  if (!name || !name.trim()) return;
+
+  const projects = clGetProjects();
+  projects.unshift({
+    id: crypto.randomUUID(),
+    name: name.trim(),
+    createdAt: new Date().toISOString()
+  });
+
+  clSaveProjects(projects);
+  clRenderProjects();
+});
+
+clRenderProjects();
+
 const clearProjectsButton = document.getElementById("cl-clear-projects");
 
 if (clearProjectsButton) {
@@ -672,28 +689,6 @@ if (clearProjectsButton) {
     alert("Semua proyek berhasil dihapus.");
   });
 }
-
-card.append(title, date, details, remove);
-    list.appendChild(card);
-  });
-}
-
-document.getElementById("cl-new-project").addEventListener("click", () => {
-  const name = prompt("Masukkan nama proyek:");
-  if (!name || !name.trim()) return;
-
-  const projects = clGetProjects();
-  projects.unshift({
-    id: crypto.randomUUID(),
-    name: name.trim(),
-    createdAt: new Date().toISOString()
-  });
-
-  clSaveProjects(projects);
-  clRenderProjects();
-});
-
-clRenderProjects();
 
 const clPages = document.querySelectorAll("#clip-dashboard .cl-page");
 const clNavs = document.querySelectorAll("#clip-dashboard .cl-nav");
