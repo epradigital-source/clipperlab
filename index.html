@@ -242,7 +242,7 @@ window.addEventListener('beforeunload', () => {
     }
   });
 </script>
-```html
+
 <!-- ClipperLab Dashboard -->
 <style>
   #clip-dashboard {
@@ -290,6 +290,22 @@ window.addEventListener('beforeunload', () => {
   }
 </style>
 
+<button id="open-dashboard" style="
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 9997;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #8055ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+">
+  Dashboard
+</button>
+
 <div id="clip-dashboard">
   <h1>Clipper<span style="color:#9b7aff">Lab</span></h1>
   <p class="muted">Dashboard kreator video kamu.</p>
@@ -331,6 +347,14 @@ window.addEventListener('beforeunload', () => {
   const auth = getAuth();
   const dashboard = document.getElementById("clip-dashboard");
 
+document.getElementById("open-dashboard").onclick = () => {
+  if (auth.currentUser) {
+    dashboard.style.display = "block";
+  } else {
+    alert("Login Google dulu, cuy!");
+  }
+};
+
   onAuthStateChanged(auth, user => {
     if (!user) {
       dashboard.style.display = "none";
@@ -371,6 +395,6 @@ window.addEventListener('beforeunload', () => {
     alert("Fitur Premium sedang disiapkan!");
   };
 </script>
-```
+
 </body>
 </html>
