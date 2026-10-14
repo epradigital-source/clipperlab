@@ -130,7 +130,34 @@ function escapeHtml(str){return String(str).replace(/[&<>"']/g,c=>({'&':'&amp;',
 function selectedClip(){return state.clips.find(c=>c.id===state.selectedId)||null}
 function updateStats(){$('statClips').textContent=`${state.clips.length} klip`;$('clipCount').textContent=`${state.clips.length} klip`}
 function loadFile(file){if(!file||!file.type.startsWith('video/')){toast('Pilih file video yang valid.');return}if(state.url)URL.revokeObjectURL(state.url);state.file=file;state.url=URL.createObjectURL(file);state.clips=[];state.selectedId=null;state.transcriptChunks=[];state.analysisAudio=null;state.audioContext=null;state.audioSource=null;state.audioOut=null;$('dropzone').classList.add('hidden');$('loadedVideo').classList.remove('hidden');$('noVideoHint').classList.add('hidden');$('clipControls').classList.remove('hidden');$('fileName').textContent=file.name;$('fileInfo').textContent=`Memuat durasi… · ${fmtBytes(file.size)}`;video.src=state.url;video.load();renderVideo.src=state.url;renderVideo.load();$('transcriptText').value='';$('downloadSrtBtn').disabled=true;$('transcribeBtn').disabled=true;setStatus('transcriptStatus','');setStatus('exportStatus','');drawPlaceholder();}
-$('chooseBtn').addEventListener('click',()=> $('videoInput').click());$('replaceBtn').addEventListener('click',()=> $('videoInput').click());$('videoInput').addEventListener('change',e=>{loadFile(e.target.files?.[0]);e.target.value=''});
+$('chooseBtn').addEventListener('click',()=> $('videoInput').click());$('replaceBtn').addEventListener('click',()=> $('videoInput').click());
+$('videoInput').addEventListener('change', e => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  loadFile(file);
+if (typeof clRenderProjects === "function") clRenderProjects();
+  try {
+    const key = "clipperlab-projects";
+    const projects = JSON.parse(localStorage.getItem(key) || "[]");
+
+    projects.unshift({
+      id: crypto.randomUUID(),
+      name: file.name,
+      videoName: file.name,
+      videoSize: file.size,
+      createdAt: new Date().toISOString()
+    });
+
+    localStorage.setItem(key, JSON.stringify(projects));
+  } catch (error) {
+    console.error("Gagal menyimpan proyek:", error);
+    alert("Video terbuka, tetapi informasi proyek gagal disimpan.");
+  }
+
+  e.target.value = "";
+});
+
 const dz=$('dropzone');['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));dz.addEventListener('drop',e=>loadFile(e.dataTransfer.files?.[0]));
 video.addEventListener('loadedmetadata',()=>{state.duration=video.duration||0;$('fileInfo').textContent=`${fmtTime(state.duration)} · ${fmtBytes(state.file?.size||0)}`;$('clipEnd').value=Math.min(Number($('clipLength').value),state.duration).toFixed(1);$('transcribeBtn').disabled=false;drawPreview();});
 video.addEventListener('timeupdate',drawPreview);video.addEventListener('seeked',drawPreview);$('aspect').addEventListener('change',drawPreview);$('overlayText').addEventListener('input',drawPreview);$('safeMargin').addEventListener('change',drawPreview);$('captionStyle').addEventListener('change',drawPreview);
