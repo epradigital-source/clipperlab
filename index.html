@@ -501,8 +501,12 @@ window.addEventListener('beforeunload', () => {
       <div class="cl-card">
         <h2>Proyek Saya</h2>
         <p class="muted">Proyek yang tercatat di browser ini akan ditampilkan di sini.</p>
-        <p id="dash-projects">Belum ada proyek yang tercatat.</p>
-        <button id="cl-new-project" class="cl-primary">＋ Buat Proyek</button>
+        
+<div id="cl-project-list">
+  <p id="dash-projects" class="muted">Belum ada proyek yang tersimpan.</p>
+</div>
+<button id="cl-new-project" class="cl-primary">＋ Buat Proyek</button>
+
       </div>
     </section>
 
@@ -544,6 +548,84 @@ window.addEventListener('beforeunload', () => {
 
   const auth = getAuth();
   const dashboard = document.getElementById("clip-dashboard");
+
+const CL_PROJECT_KEY = "clipperlab-projects";
+
+function clGetProjects() {
+  try {
+    return JSON.parse(localStorage.getItem(CL_PROJECT_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function clSaveProjects(projects) {
+  localStorage.setItem(CL_PROJECT_KEY, JSON.stringify(projects));
+}
+
+function clRenderProjects() {
+  const list = document.getElementById("cl-project-list");
+  const count = document.getElementById("cl-project-count");
+
+  if (!list || !count) return;
+
+  const projects = clGetProjects();
+  count.textContent = projects.length;
+  list.replaceChildren();
+
+  if (!projects.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "Belum ada proyek yang tersimpan.";
+    list.appendChild(empty);
+    return;
+  }
+
+  projects.forEach(project => {
+    const card = document.createElement("div");
+    card.className = "cl-card";
+
+    const title = document.createElement("h3");
+    title.textContent = project.name;
+
+    const date = document.createElement("p");
+    date.className = "muted";
+    date.textContent = new Date(project.createdAt).toLocaleString("id-ID");
+
+    const remove = document.createElement("button");
+    remove.className = "cl-quiet";
+    remove.textContent = "Hapus";
+
+    remove.addEventListener("click", () => {
+      if (!confirm(`Hapus proyek "${project.name}"?`)) return;
+
+      clSaveProjects(
+        clGetProjects().filter(item => item.id !== project.id)
+      );
+      clRenderProjects();
+    });
+
+    card.append(title, date, remove);
+    list.appendChild(card);
+  });
+}
+
+document.getElementById("cl-new-project").addEventListener("click", () => {
+  const name = prompt("Masukkan nama proyek:");
+  if (!name || !name.trim()) return;
+
+  const projects = clGetProjects();
+  projects.unshift({
+    id: crypto.randomUUID(),
+    name: name.trim(),
+    createdAt: new Date().toISOString()
+  });
+
+  clSaveProjects(projects);
+  clRenderProjects();
+});
+
+clRenderProjects();
 
 const clPages = document.querySelectorAll("#clip-dashboard .cl-page");
 const clNavs = document.querySelectorAll("#clip-dashboard .cl-nav");
