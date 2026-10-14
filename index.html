@@ -618,6 +618,16 @@ function clRenderProjects() {
     const date = document.createElement("p");
     date.className = "muted";
     date.textContent = new Date(project.createdAt).toLocaleString("id-ID");
+    
+const details = document.createElement("p");
+details.className = "muted";
+
+if (project.videoName) {
+  const sizeMB = (project.videoSize / (1024 * 1024)).toFixed(1);
+  details.textContent = `Video: ${project.videoName} · ${sizeMB} MB`;
+} else {
+  details.textContent = "Proyek baru · Belum ada video";
+}
 
     const remove = document.createElement("button");
     remove.className = "cl-quiet";
@@ -632,7 +642,7 @@ function clRenderProjects() {
       clRenderProjects();
     });
 
-    card.append(title, date, remove);
+card.append(title, date, details, remove);
     list.appendChild(card);
   });
 }
@@ -681,8 +691,10 @@ clNavs.forEach(button => {
   button.addEventListener("click", () => clShowPage(button.dataset.page));
 });
 
-document.getElementById("cl-new-project").onclick = () => {
-  document.getElementById("dash-start").click();
+document.getElementById("dash-start").addEventListener("click", () => {
+  dashboard.style.display = "none";
+  document.getElementById("chooseBtn").click();
+});
 };
 
 document.getElementById("dash-start").addEventListener("click", () => {
