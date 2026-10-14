@@ -173,13 +173,15 @@ $('exportBtn').addEventListener('click',exportClip);
 // Keep the local canvas preview refreshed while the source player is used.
 function previewLoop(){drawPreview();requestAnimationFrame(previewLoop)}
 drawPlaceholder();requestAnimationFrame(previewLoop);
-window.addEventListener('beforeunload',()=>{if(st
-      loginBtn.textContent = "Masuk dengan Google";
-      account.textContent = "Belum login";
-    }
-  });
+
+window.addEventListener('beforeunload', () => {
+  if (state.url) URL.revokeObjectURL(state.url);
+  if (state.audioContext) {
+    state.audioContext.close().catch(() => {});
+  }
+});
 </script>
-</
+
 <!-- ClipperLab: Login Google -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -196,7 +198,7 @@ window.addEventListener('beforeunload',()=>{if(st
     authDomain: "clipperlab-d7fd4.firebaseapp.com",
     projectId: "clipperlab-d7fd4",
     storageBucket: "clipperlab-d7fd4.firebasestorage.app",
-    messagingSenderId: "936837498765",
+    messagingSenderId: "ISI_MESSAGING_SENDER_ID",
     appId: "1:936837498765:web:997329368f237763605fc4"
   };
 
@@ -219,12 +221,13 @@ window.addEventListener('beforeunload',()=>{if(st
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
-      alert("Login gagal: " + error.message);
+      alert("Login gagal: " + error.code + " - " + error.message);
     }
   };
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, user => {
     account.replaceChildren();
+
     if (user) {
       loginBtn.textContent = "Sudah masuk";
       account.textContent = user.displayName || user.email;
