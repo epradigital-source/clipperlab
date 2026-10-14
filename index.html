@@ -534,6 +534,10 @@ window.addEventListener('beforeunload', () => {
 </div>
 <button id="cl-new-project" class="cl-primary">＋ Buat Proyek</button>
 
+<button id="cl-clear-projects" class="cl-quiet">
+  Hapus Semua Proyek
+</button>
+
       </div>
     </section>
 
@@ -641,6 +645,33 @@ if (project.videoName) {
       );
       clRenderProjects();
     });
+
+const clearProjectsButton = document.getElementById("cl-clear-projects");
+
+if (clearProjectsButton) {
+  clearProjectsButton.addEventListener("click", () => {
+    const projects = clGetProjects();
+
+    if (projects.length === 0) {
+      alert("Belum ada proyek untuk dihapus.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `Hapus semua ${projects.length} proyek? Tindakan ini tidak bisa dibatalkan.`
+    );
+
+    if (!confirmed) return;
+
+    clSaveProjects([]);
+    clRenderProjects();
+
+    const recent = document.getElementById("cl-recent");
+    if (recent) recent.textContent = "Belum ada aktivitas clipping.";
+
+    alert("Semua proyek berhasil dihapus.");
+  });
+}
 
 card.append(title, date, details, remove);
     list.appendChild(card);
