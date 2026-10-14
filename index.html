@@ -173,7 +173,72 @@ $('exportBtn').addEventListener('click',exportClip);
 // Keep the local canvas preview refreshed while the source player is used.
 function previewLoop(){drawPreview();requestAnimationFrame(previewLoop)}
 drawPlaceholder();requestAnimationFrame(previewLoop);
-window.addEventListener('beforeunload',()=>{if(state.url)URL.revokeObjectURL(state.url);if(state.audioContext)state.audioContext.close().catch(()=>{})});
+window.addEventListener('beforeunload',()=>{if(st
+      loginBtn.textContent = "Masuk dengan Google";
+      account.textContent = "Belum login";
+    }
+  });
 </script>
+</
+<!-- ClipperLab: Login Google -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB7-77yGFVsxovrRWZ8b1ZPUkh4vHpEyDE",
+    authDomain: "clipperlab-d7fd4.firebaseapp.com",
+    projectId: "clipperlab-d7fd4",
+    storageBucket: "clipperlab-d7fd4.firebasestorage.app",
+    messagingSenderId: "936837498765",
+    appId: "1:936837498765:web:997329368f237763605fc4"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const loginBtn = document.createElement("button");
+  loginBtn.textContent = "Masuk dengan Google";
+  loginBtn.style.cssText =
+    "position:fixed;top:12px;right:12px;z-index:9999;padding:12px 16px;border:0;border-radius:10px;background:#4285f4;color:white;font-weight:bold";
+
+  const account = document.createElement("div");
+  account.style.cssText =
+    "position:fixed;top:60px;right:12px;z-index:9999;background:white;color:#222;padding:8px;border-radius:8px";
+
+  document.body.append(loginBtn, account);
+
+  loginBtn.onclick = async () => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      alert("Login gagal: " + error.message);
+    }
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    account.replaceChildren();
+    if (user) {
+      loginBtn.textContent = "Sudah masuk";
+      account.textContent = user.displayName || user.email;
+
+      const logoutBtn = document.createElement("button");
+      logoutBtn.textContent = "Keluar";
+      logoutBtn.onclick = () => signOut(auth);
+      account.append(" ", logoutBtn);
+    } else {
+      loginBtn.textContent = "Masuk dengan Google";
+      account.textContent = "Belum login";
+    }
+  });
+</script>
+
 </body>
 </html>
