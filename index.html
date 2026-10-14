@@ -288,6 +288,91 @@ window.addEventListener('beforeunload', () => {
   #clip-dashboard .muted {
     color: #aaaabb;
   }
+ 
+/* ClipperLab Dashboard layout fix */
+#clip-dashboard {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #0b0b12;
+  color: #f5f5ff;
+}
+
+#clip-dashboard *,
+#clip-dashboard *::before,
+#clip-dashboard *::after {
+  box-sizing: border-box;
+}
+
+#clip-dashboard .cl-layout {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 24px;
+}
+
+#clip-dashboard .cl-sidebar {
+  flex: 0 0 225px;
+  min-width: 0;
+}
+
+#clip-dashboard .cl-main {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 100%;
+}
+
+#clip-dashboard .cl-header h1,
+#clip-dashboard .cl-header h2,
+#clip-dashboard .cl-card h2,
+#clip-dashboard .cl-welcome h2 {
+  color: #f5f5ff;
+  overflow-wrap: anywhere;
+}
+
+#clip-dashboard .cl-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+#clip-dashboard .cl-card,
+#clip-dashboard .cl-welcome,
+#clip-dashboard .cl-premium {
+  min-width: 0;
+}
+
+#clip-dashboard button {
+  max-width: 100%;
+  white-space: normal;
+}
+
+#clip-dashboard [hidden] {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  #clip-dashboard .cl-layout {
+    flex-direction: column;
+  }
+
+  #clip-dashboard .cl-sidebar {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  #clip-dashboard .cl-main {
+    width: 100%;
+  }
+
+  #clip-dashboard .cl-stats {
+    grid-template-columns: 1fr;
+  }
+}
+ 
 </style>
 
 #clip-dashboard .cl-layout {
