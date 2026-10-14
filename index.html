@@ -290,6 +290,179 @@ window.addEventListener('beforeunload', () => {
   }
 </style>
 
+#clip-dashboard .cl-layout {
+  display: flex;
+  gap: 24px;
+  max-width: 1400px;
+  margin: auto;
+  min-height: 80vh;
+}
+
+#clip-dashboard .cl-sidebar {
+  width: 225px;
+  flex-shrink: 0;
+  background: #11111c;
+  border: 1px solid #29293a;
+  border-radius: 18px;
+  padding: 22px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#clip-dashboard .cl-sidebar h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+#clip-dashboard .muted {
+  color: #a3a3b8;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+#clip-dashboard .cl-nav,
+#clip-dashboard .cl-logout {
+  text-align: left;
+  width: 100%;
+  color: #d7d7e5;
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 13px;
+}
+
+#clip-dashboard .cl-nav.active,
+#clip-dashboard .cl-nav:hover {
+  background: #28213f;
+  border-color: #6045a5;
+  color: #c4b5fd;
+}
+
+#clip-dashboard .cl-side-bottom {
+  margin-top: auto;
+}
+
+#clip-dashboard .cl-main {
+  flex: 1;
+  min-width: 0;
+}
+
+#clip-dashboard .cl-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 25px;
+}
+
+#clip-dashboard .cl-header h1 {
+  margin: 0;
+}
+
+#clip-dashboard .cl-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+#clip-dashboard .cl-user p {
+  margin: 4px 0;
+}
+
+#clip-dashboard .cl-welcome,
+#clip-dashboard .cl-premium {
+  background: linear-gradient(130deg, #292044, #171722 70%);
+  border: 1px solid #57417c;
+  padding: 26px;
+  border-radius: 18px;
+  margin-bottom: 24px;
+}
+
+#clip-dashboard .cl-welcome h2,
+#clip-dashboard .cl-premium h2 {
+  margin: 8px 0;
+}
+
+#clip-dashboard .cl-big-icon {
+  font-size: 54px;
+  color: #c4b5fd;
+}
+
+#clip-dashboard .cl-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 14px 0 24px;
+}
+
+#clip-dashboard .cl-card {
+  background: #171722;
+  border: 1px solid #29293a;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  overflow-wrap: anywhere;
+}
+
+#clip-dashboard .cl-card h2 {
+  margin-bottom: 8px;
+}
+
+#clip-dashboard .cl-primary {
+  background: #8055ff;
+  color: white;
+  margin-top: 10px;
+}
+
+#clip-dashboard .cl-quiet {
+  background: #29293a;
+  color: white;
+}
+
+#clip-dashboard .cl-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #a3a3b8;
+  margin-top: 24px;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  #clip-dashboard {
+    padding: 12px;
+  }
+
+  #clip-dashboard .cl-layout {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  #clip-dashboard .cl-sidebar {
+    width: auto;
+  }
+
+  #clip-dashboard .cl-side-bottom {
+    margin-top: 8px;
+  }
+
+  #clip-dashboard .cl-stats {
+    grid-template-columns: 1fr;
+  }
+
+  #clip-dashboard .cl-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  #clip-dashboard .cl-welcome {
+    padding: 18px;
+  }
+}
+
 <button id="open-dashboard" style="
   position: fixed;
   top: 12px;
@@ -337,6 +510,113 @@ window.addEventListener('beforeunload', () => {
     <button id="dash-premium" class="secondary">Lihat Fitur</button>
   </div>
 
+<div class="cl-layout">
+  <aside class="cl-sidebar">
+    <h2>Clipper<span style="color:#a78bfa">Lab</span></h2>
+    <p class="muted">CREATOR STUDIO</p>
+
+    <button class="cl-nav active" data-page="overview">⌂ Dashboard</button>
+    <button class="cl-nav" data-page="projects">▤ Proyek Saya</button>
+    <button class="cl-nav" data-page="profile">◉ Profil</button>
+    <button class="cl-nav" data-page="premium">★ Premium</button>
+
+    <div class="cl-side-bottom">
+      <p class="muted">ClipperLab Studio</p>
+      <button id="dash-logout" class="cl-logout">Keluar Akun</button>
+    </div>
+  </aside>
+
+  <main class="cl-main">
+    <header class="cl-header">
+      <div>
+        <p class="muted">CREATOR WORKSPACE</p>
+        <h1 id="cl-page-title">Dashboard</h1>
+      </div>
+      <div class="cl-user">
+        <img id="dash-photo" alt="Foto profil"
+          style="width:42px;height:42px;border-radius:50%;object-fit:cover;display:none">
+        <div>
+          <strong id="dash-name">Kreator</strong>
+          <p id="dash-email" class="muted"></p>
+        </div>
+      </div>
+    </header>
+
+    <section class="cl-page" id="page-overview">
+      <div class="cl-welcome">
+        <div>
+          <p>SELAMAT DATANG DI CLIPPERLAB</p>
+          <h2>Waktunya bikin konten, cuy! 🎬</h2>
+          <p>Mulai dari video panjang menjadi konten yang siap kamu kembangkan.</p>
+          <button id="dash-start" class="cl-primary">＋ Mulai Clipping</button>
+        </div>
+        <div class="cl-big-icon">▶</div>
+      </div>
+
+      <h2>Ringkasan</h2>
+      <div class="cl-stats">
+        <div class="cl-card">
+          <span>📁</span>
+          <p class="muted">Proyek tersimpan</p>
+          <h2 id="cl-project-count">0</h2>
+        </div>
+        <div class="cl-card">
+          <span>🎬</span>
+          <p class="muted">Video diproses</p>
+          <h2 id="cl-video-count">0</h2>
+        </div>
+        <div class="cl-card">
+          <span>⭐</span>
+          <p class="muted">Paket akun</p>
+          <h2>Free</h2>
+        </div>
+      </div>
+
+      <div class="cl-card">
+        <h2>Aktivitas Terbaru</h2>
+        <p id="cl-recent" class="muted">Belum ada aktivitas clipping.</p>
+      </div>
+    </section>
+
+    <section class="cl-page" id="page-projects" hidden>
+      <div class="cl-card">
+        <h2>Proyek Saya</h2>
+        <p class="muted">Proyek yang tercatat di browser ini akan ditampilkan di sini.</p>
+        <p id="dash-projects">Belum ada proyek yang tercatat.</p>
+        <button id="cl-new-project" class="cl-primary">＋ Buat Proyek</button>
+      </div>
+    </section>
+
+    <section class="cl-page" id="page-profile" hidden>
+      <div class="cl-card">
+        <h2>Profil Pengguna</h2>
+        <p>Nama: <strong id="cl-profile-name">Kreator</strong></p>
+        <p>Email: <span id="cl-profile-email">-</span></p>
+        <p class="muted">Informasi akun diambil dari login Google.</p>
+      </div>
+    </section>
+
+    <section class="cl-page" id="page-premium" hidden>
+      <div class="cl-premium">
+        <p>CLIPPERLAB PREMIUM</p>
+        <h2>Lebih banyak ruang untuk berkarya. </h2>
+        <p>Halaman Premium sedang disiapkan. Pembayaran belum diaktifkan.</p>
+        <ul>
+          <li>Rencana fitur editing lanjutan</li>
+          <li>Pengelolaan proyek yang lebih lengkap</li>
+          <li>Alur kerja kreator yang lebih praktis</li>
+        </ul>
+        <button class="cl-primary" id="dash-premium">Lihat Informasi</button>
+      </div>
+    </section>
+
+    <footer class="cl-footer">
+      ClipperLab © 2026 · Creator Studio
+      <button id="dash-back" class="cl-quiet">Kembali ke Editor</button>
+    </footer>
+  </main>
+</div>
+
   <button id="dash-back" class="secondary">Kembali ke Editor</button>
 </div>
 
@@ -346,6 +626,47 @@ window.addEventListener('beforeunload', () => {
 
   const auth = getAuth();
   const dashboard = document.getElementById("clip-dashboard");
+
+const clPages = document.querySelectorAll("#clip-dashboard .cl-page");
+const clNavs = document.querySelectorAll("#clip-dashboard .cl-nav");
+
+function clShowPage(page) {
+  clPages.forEach(section => {
+    section.hidden = section.id !== "page-" + page;
+  });
+
+  clNavs.forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
+
+  const titles = {
+    overview: "Dashboard",
+    projects: "Proyek Saya",
+    profile: "Profil Pengguna",
+    premium: "ClipperLab Premium"
+  };
+
+  document.getElementById("cl-page-title").textContent =
+    titles[page] || "Dashboard";
+}
+
+clNavs.forEach(button => {
+  button.addEventListener("click", () => clShowPage(button.dataset.page));
+});
+
+document.getElementById("cl-new-project").onclick = () => {
+  document.getElementById("dash-start").click();
+};
+
+document.getElementById("dash-start").addEventListener("click", () => {
+  const count = Number(localStorage.getItem("cl-video-count") || 0);
+  localStorage.setItem("cl-video-count", String(count + 1));
+  document.getElementById("cl-video-count").textContent = count + 1;
+});
+
+document.getElementById("dash-premium").onclick = () => {
+  alert("Fitur Premium dan pembayaran belum tersedia.");
+};
 
 document.getElementById("open-dashboard").onclick = () => {
   if (auth.currentUser) {
@@ -360,7 +681,10 @@ document.getElementById("open-dashboard").onclick = () => {
       dashboard.style.display = "none";
       return;
     }
-
+document.getElementById("cl-profile-name").textContent =
+  user.displayName || "Kreator";
+document.getElementById("cl-profile-email").textContent = user.email || "-";
+clShowPage("overview");
     document.getElementById("dash-name").textContent =
       user.displayName || "Kreator";
     document.getElementById("dash-email").textContent =
